@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Öneri & Fotoğraf Kısayol Sayfası</title>
-  <meta name="description" content="Hızlı yönlendirme: Öneri formu ve fotoğraf yükleme linki" />
+  <meta name="description" content="Hızlı yönlendirme: Öneri formu ve fotoğraf yükleme linki (sayfadan ayrılmadan modal içinde)" />
   <style>
     :root{--bg:#0b1220;--card:#0f172a;--muted:#94a3b8;--text:#e6edf3}
     *{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;background:radial-gradient(1200px 800px at 20% -20%,#12223d 0%,transparent 60%),linear-gradient(180deg,#0b1220,#0b1220);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{width:100%;max-width:720px;background:linear-gradient(180deg,#0f172a 0%,#0b1220 100%);border:1px solid rgba(148,163,184,.15);border-radius:24px;box-shadow:0 10px 50px rgba(0,0,0,.35);padding:28px}
+    .card{width:100%;max-width:820px;background:linear-gradient(180deg,#0f172a 0%,#0b1220 100%);border:1px solid rgba(148,163,184,.15);border-radius:24px;box-shadow:0 10px 50px rgba(0,0,0,.35);padding:28px}
     .hdr{display:flex;align-items:center;gap:14px}
     .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(96,165,250,.25),rgba(52,211,153,.15))}
     h1{font-size:26px;margin:0}
@@ -23,6 +23,18 @@
     .btn-primary{background:linear-gradient(180deg,rgba(96,165,250,.25),rgba(29,78,216,.35));border:1px solid rgba(96,165,250,.5)}
     .btn-success{background:linear-gradient(180deg,rgba(52,211,153,.25),rgba(5,150,105,.35));border:1px solid rgba(52,211,153,.5)}
     .muted{font-size:13px;color:#9fb0c6}
+
+    /* Modal (native <dialog>) */
+    dialog{width:min(1100px,96vw);height:min(86vh,900px);border:none;border-radius:16px;padding:0;background:#0b1220}
+    dialog::backdrop{background:rgba(0,0,0,.55)}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(148,163,184,.2)}
+    .modal-title{font-weight:700}
+    .modal-actions{display:flex;gap:8px}
+    .xbtn{background:#101826;border:1px solid rgba(148,163,184,.25);color:#e6edf3;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
+    .modal-body{height:calc(100% - 54px);}
+    .frame{width:100%;height:100%;border:0;border-bottom-left-radius:16px;border-bottom-right-radius:16px;background:#0b1220}
+    .fallback{display:none;padding:14px}
+    .fallback a{color:#9cd2ff}
   </style>
 </head>
 <body>
@@ -32,32 +44,95 @@
         <div class="logo" aria-hidden="true">🔗</div>
         <div>
           <h1>Öneri & Fotoğraf Kısayolları</h1>
-          <p>Tek ekrandan iki buton: biri <strong>Öneri Formu</strong>, diğeri <strong>Fotoğraf Yükleme</strong> için. Her tıklama ayrı sekmede açılır.</p>
+          <p>Tek ekrandan iki buton: biri <strong>Öneri Formu</strong>, diğeri <strong>Fotoğraf Yükleme</strong>. İkisi de sayfadan ayrılmadan <em>modal pencerede</em> açılır. (Bazı kurumsal güvenlik ayarları gömülü görüntülemeyi engellerse otomatik "yeni sekme" seçeneği çıkar.)</p>
         </div>
       </div>
 
       <div class="grid">
-        <button class="btn btn-primary" id="goSuggest">📝 Öneri Formu</button>
-        <button class="btn btn-success" id="goUpload">📷 Fotoğraf Yükle</button>
+        <button class="btn btn-primary" id="openSuggest">📝 Öneri Formu</button>
+        <button class="btn btn-success" id="openUpload">📷 Fotoğraf Yükle</button>
       </div>
 
       <p class="muted" style="margin-top:18px">Ayar: Aşağıdaki <code>LINK_SUGGEST</code> (Forms) ve <code>LINK_UPLOAD</code> (OneDrive) adreslerini kendi bağlantılarınla değiştir.</p>
     </div>
   </div>
 
+  <!-- Modal: SUGGEST -->
+  <dialog id="dlgSuggest">
+    <div class="modal-head">
+      <div class="modal-title">📝 Öneri Formu</div>
+      <div class="modal-actions">
+        <button class="xbtn" data-open-new="suggest">Yeni Sekmede Aç</button>
+        <button class="xbtn" data-close>✕ Kapat</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe id="frameSuggest" class="frame" referrerpolicy="no-referrer"></iframe>
+      <div id="fallbackSuggest" class="fallback">İçerik gömülü açılamadı. <a id="aSuggest" target="_blank" rel="noopener">Yeni sekmede açmak için tıklayın.</a></div>
+    </div>
+  </dialog>
+
+  <!-- Modal: UPLOAD -->
+  <dialog id="dlgUpload">
+    <div class="modal-head">
+      <div class="modal-title">📷 Fotoğraf Yükle</div>
+      <div class="modal-actions">
+        <button class="xbtn" data-open-new="upload">Yeni Sekmede Aç</button>
+        <button class="xbtn" data-close>✕ Kapat</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe id="frameUpload" class="frame" referrerpolicy="no-referrer"></iframe>
+      <div id="fallbackUpload" class="fallback">İçerik gömülü açılamadı. <a id="aUpload" target="_blank" rel="noopener">Yeni sekmede açmak için tıklayın.</a></div>
+    </div>
+  </dialog>
+
 <script>
   // ==== 🔧 SADE AYARLAR ====
   const LINK_SUGGEST = "https://forms.office.com/Pages/ResponsePage.aspx?id=vP9DjXqlnk2FBdXxjX6sm29P8ZqIMq5Hh-oV8Qg4EGBUMUFFNTdDSE5GR1VNRFI0WlNOT0JaTk45NC4u"; // Öneri formu
-  const LINK_UPLOAD  = "https://eczacibasi-my.sharepoint.com/:f:/g/personal/emirhan_cakir_vitra_com_tr/ElR-CIOuCK1KuvMb4sjEL1IBaJ5WQElt1kn8xARkmcVAPg"; // Fotoğraf yükleme linki
+  const LINK_UPLOAD  = "https://eczacibasi-my.sharepoint.com/:f:/g/personal/emirhan_cakir_vitra_com_tr/ElR-CIOuCK1KuvMb4sjEL1IBaJ5WQElt1kn8xARkmcVAPg"; // Fotoğraf yükleme linki (Embed engellenirse yeni sekmeye düşer)
 
   const $ = (s)=>document.querySelector(s);
 
-  function init(){
-    $('#goSuggest').addEventListener('click', ()=> window.open(LINK_SUGGEST,'_blank','noopener'));
-    $('#goUpload').addEventListener('click',  ()=> window.open(LINK_UPLOAD,'_blank','noopener'));
+  function openModal(which){
+    const dlg   = which==='suggest' ? $('#dlgSuggest')  : $('#dlgUpload');
+    const frame = which==='suggest' ? $('#frameSuggest'): $('#frameUpload');
+    const url   = which==='suggest' ? LINK_SUGGEST      : LINK_UPLOAD;
+    const fb    = which==='suggest' ? $('#fallbackSuggest') : $('#fallbackUpload');
+    const abtn  = which==='suggest' ? $('#aSuggest')        : $('#aUpload');
+
+    // Varsayılan: iframe'e yüklemeyi dene
+    fb.style.display = 'none';
+    frame.style.display = 'block';
+    frame.src = url;
+    abtn.href = url;
+
+    // 2.5 sn içinde yüklenmezse (veya CSP engeli varsa) fallback göster
+    const timer = setTimeout(()=>{
+      frame.style.display = 'none';
+      fb.style.display = 'block';
+    }, 2500);
+
+    frame.onload = ()=> clearTimeout(timer);
+
+    if(typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open','');
   }
 
-  init();
+  function closeModal(el){
+    const dlg = el.closest('dialog');
+    if(typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open');
+  }
+
+  // Aç/Kapat/Yeni sekme olayları
+  $('#openSuggest').addEventListener('click', ()=> openModal('suggest'));
+  $('#openUpload').addEventListener('click',  ()=> openModal('upload'));
+
+  document.querySelectorAll('[data-close]').forEach(btn=>btn.addEventListener('click', e=> closeModal(e.target)));
+  document.querySelectorAll('[data-open-new]').forEach(btn=>btn.addEventListener('click', e=>{
+    const t = e.target.getAttribute('data-open-new');
+    const url = t==='suggest' ? LINK_SUGGEST : LINK_UPLOAD;
+    window.open(url,'_blank','noopener');
+  }));
 </script>
 </body>
 </html>
