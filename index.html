@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Öneri & Fotoğraf Kısayol Sayfası</title>
+  <meta name="description" content="Hızlı yönlendirme: Öneri formu ve fotoğraf yükleme linki" />
+  <style>
+    :root{--bg:#0b1220;--card:#0f172a;--muted:#94a3b8;--text:#e6edf3}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 800px at 20% -20%,#12223d 0%,transparent 60%),linear-gradient(180deg,#0b1220,#0b1220);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{width:100%;max-width:720px;background:linear-gradient(180deg,#0f172a 0%,#0b1220 100%);border:1px solid rgba(148,163,184,.15);border-radius:24px;box-shadow:0 10px 50px rgba(0,0,0,.35);padding:28px}
+    .hdr{display:flex;align-items:center;gap:14px}
+    .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(96,165,250,.25),rgba(52,211,153,.15))}
+    h1{font-size:26px;margin:0}
+    p{color:var(--muted);line-height:1.55;margin-top:8px}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px}
+    @media (min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+    .btn{border:none;border-radius:16px;padding:18px 20px;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s transform ease,.2s filter ease;outline:none;color:#e6edf3}
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{background:linear-gradient(180deg,rgba(96,165,250,.25),rgba(29,78,216,.35));border:1px solid rgba(96,165,250,.5)}
+    .btn-success{background:linear-gradient(180deg,rgba(52,211,153,.25),rgba(5,150,105,.35));border:1px solid rgba(52,211,153,.5)}
+    .muted{font-size:13px;color:#9fb0c6}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="hdr">
+        <div class="logo" aria-hidden="true">🔗</div>
+        <div>
+          <h1>Öneri & Fotoğraf Kısayolları</h1>
+          <p>Tek ekrandan iki buton: biri <strong>Öneri Formu</strong>, diğeri <strong>Fotoğraf Yükleme</strong> için. Her tıklama ayrı sekmede açılır.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <button class="btn btn-primary" id="goSuggest">📝 Öneri Formu</button>
+        <button class="btn btn-success" id="goUpload">📷 Fotoğraf Yükle</button>
+      </div>
+
+      <p class="muted" style="margin-top:18px">Ayar: Aşağıdaki <code>LINK_SUGGEST</code> (Forms) ve <code>LINK_UPLOAD</code> (OneDrive) adreslerini kendi bağlantılarınla değiştir.</p>
+    </div>
+  </div>
+
+<script>
+  // ==== 🔧 SADE AYARLAR ====
+  const LINK_SUGGEST = "https://forms.office.com/Pages/ResponsePage.aspx?id=vP9DjXqlnk2FBdXxjX6sm29P8ZqIMq5Hh-oV8Qg4EGBUMUFFNTdDSE5GR1VNRFI0WlNOT0JaTk45NC4u"; // Öneri formu
+  const LINK_UPLOAD  = "https://eczacibasi-my.sharepoint.com/:f:/g/personal/emirhan_cakir_vitra_com_tr/ElR-CIOuCK1KuvMb4sjEL1IBaJ5WQElt1kn8xARkmcVAPg"; // Fotoğraf yükleme linki
+
+  const $ = (s)=>document.querySelector(s);
+
+  function init(){
+    $('#goSuggest').addEventListener('click', ()=> window.open(LINK_SUGGEST,'_blank','noopener'));
+    $('#goUpload').addEventListener('click',  ()=> window.open(LINK_UPLOAD,'_blank','noopener'));
+  }
+
+  init();
+</script>
+</body>
+</html>
