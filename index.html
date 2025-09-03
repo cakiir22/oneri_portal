@@ -95,23 +95,33 @@
   const $ = (s)=>document.querySelector(s);
 
   function openModal(which){
-    const dlg   = which==='suggest' ? $('#dlgSuggest')  : $('#dlgUpload');
-    const frame = which==='suggest' ? $('#frameSuggest'): $('#frameUpload');
-    const url   = which==='suggest' ? LINK_SUGGEST      : LINK_UPLOAD;
-    const fb    = which==='suggest' ? $('#fallbackSuggest') : $('#fallbackUpload');
-    const abtn  = which==='suggest' ? $('#aSuggest')        : $('#aUpload');
+    // OneDrive çoğu durumda X-Frame-Options/CSP ile iframe'e izin vermez.
+    // Bu nedenle 'upload' için doğrudan yeni sekme açıyoruz.
+    if(which==='upload'){
+      window.open(LINK_UPLOAD,'_blank','noopener');
+      return;
+    }
 
-    // Varsayılan: iframe'e yüklemeyi dene
+    const dlg   = $('#dlgSuggest');
+    const frame = $('#frameSuggest');
+    const url   = LINK_SUGGEST;
+    const fb    = $('#fallbackSuggest');
+    const abtn  = $('#aSuggest');
+
     fb.style.display = 'none';
     frame.style.display = 'block';
-    frame.src = url;
+    frame.src = url + (url.includes('?') ? '&' : '?') + 'embed=true';
     abtn.href = url;
 
-    // 2.5 sn içinde yüklenmezse (veya CSP engeli varsa) fallback göster
     const timer = setTimeout(()=>{
       frame.style.display = 'none';
       fb.style.display = 'block';
     }, 2500);
+
+    frame.onload = ()=> clearTimeout(timer);
+
+    if(typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open','');
+  }, 2500);
 
     frame.onload = ()=> clearTimeout(timer);
 
