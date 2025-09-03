@@ -62,7 +62,7 @@
 <body>
   <!-- Sağ üst LOGO: (repo'na bu yolla ekle) -->
   <div class="topbar">
-    <img src="20200708151403!Eczacıbaşı_Holding_logosu.png" alt="Logo" onerror="this.style.display='none'" />
+    <img src="" alt="Logo" onerror="this.style.display='none'" />
   </div>
 
   <div class="wrap">
@@ -100,9 +100,7 @@
 
 <script>
   // ==== 🔧 LİNKLERİNİ BURAYA KOY ====
-  const LINK_SUGGEST = "https://forms.office.com/Pages/ResponsePage.aspx?id=vP9DjXqlnk2FBdXxjX6sm29P8ZqIMq5Hh-oV8Qg4EGBUMUFFNTdDSE5GR1VNRFI0WlNOT0JaTk45NC4u"; // Öneri formu
-  const LINK_UPLOAD  = "https://eczacibasi-my.sharepoint.com/:f:/g/personal/emirhan_cakir_vitra_com_tr/ElR-CIOuCK1KuvMb4sjEL1IBaJ5WQElt1kn8xARkmcVAPg"; // Fotoğraf yükleme linki (Embed engellenirse yeni sekmeye düşer)
-
+  
   const $ = (s)=>document.querySelector(s);
 
   // Öneri formu modalı aç
@@ -141,6 +139,131 @@
   $('#goUploadFromModal').addEventListener('click', ()=>{
     window.open(LINK_UPLOAD,'_blank','noopener');
   });
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Öneri Sistemi</title>
+  <meta name="description" content="Öneri formu modalda, fotoğraf yükleme yeni sekmede – Eczacıbaşı uyumlu sade tasarım" />
+  <style>
+    :root{
+      --bg:#f6f5f2;           /* kırık beyaz */
+      --card:#ffffff;
+      --muted:#6b7280;        /* gri metin */
+      --text:#1f2937;         /* koyu metin */
+      --accent:#f47321;       /* Eczacıbaşı turuncusu */
+      --border:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+
+    /* Üst bar (iki logo: sol & sağ) */
+    .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.8));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--border)}
+    .topbar img.logo{height:60px;width:auto;object-fit:contain}
+    @media (max-width:520px){.topbar img.logo{height:46px}}
+
+    .wrap{min-height:calc(100% - 65px);display:flex;align-items:center;justify-content:center;padding:32px}
+    .card{width:100%;max-width:900px;background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:0 10px 40px rgba(15,23,42,.05);padding:28px}
+
+    h1{font-size:28px;margin:0 0 6px}
+    p{color:var(--muted);line-height:1.6;margin:0}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px}
+    @media (min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+
+    .btn{border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.18s transform ease,.18s box-shadow ease;background:#fff;color:#111}
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{background:var(--accent);border-color:#f59f76;color:white;box-shadow:0 6px 20px rgba(244,115,33,.25)}
+    .btn-secondary{background:#fff;border-color:var(--border);color:#111}
+
+    .hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+    /* Modal (native <dialog>) */
+    dialog{width:min(1100px,96vw);height:min(86vh,900px);border:none;border-radius:16px;padding:0;background:#fff}
+    dialog::backdrop{background:rgba(0,0,0,.45)}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+    .modal-title{font-weight:800;color:#111}
+    .modal-actions{display:flex;gap:8px;align-items:center}
+    .xbtn{background:#fff;border:1px solid var(--border);color:#111;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
+    .xbtn.primary{background:var(--accent);border-color:#f59f76;color:#fff}
+
+    .modal-body{height:calc(100% - 56px);display:grid;grid-template-rows:1fr auto}
+    .frame{width:100%;height:100%;border:0;background:#fff;border-bottom-left-radius:16px;border-bottom-right-radius:16px}
+    .modal-foot{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--border);background:#fafafa;border-bottom-left-radius:16px;border-bottom-right-radius:16px}
+    .foot-text{font-size:14px;color:#374151}
+  </style>
+</head>
+<body>
+  <!-- LOGOLAR: index.html ile aynı klasöre koyabilirsiniz.
+       Sol logo: logo-left.png  | Sağ logo: 20200708151403!Eczacıbaşı_Holding_logosu.png
+       (Özel adlar kullanacaksanız aşağıdaki src değerlerini buna göre değiştirin.) -->
+  <div class="topbar">
+    <img class="logo" id="logoLeft"  src="logo-left.png"  alt="Sol Logo"  onerror="this.style.display='none'" />
+    <img class="logo" id="logoRight" src="logo-right.png" alt="Sağ Logo" onerror="this.style.display='none'" />
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Öneri sistemine hoş geldiniz</h1>
+      <p>Önerinizi kolayca iletin ve isterseniz önerinize ait fotoğrafları da ekleyin.</p>
+
+      <div class="grid">
+        <button class="btn btn-primary" id="openSuggest">📝 Öneri yap</button>
+        <button class="btn btn-secondary" id="openUpload">📷 Önerine yönelik fotoğraf ekle</button>
+      </div>
+
+      <div class="hint">Not: Fotoğraf yükleme bağlantısı güvenlik nedeniyle yeni sekmede açılır.</div>
+    </div>
+  </div>
+
+  <!-- Modal: ÖNERİ FORMU -->
+  <dialog id="dlgSuggest">
+    <div class="modal-head">
+      <div class="modal-title">📝 Öneri yap</div>
+      <div class="modal-actions">
+        <button class="xbtn" data-open-new="suggest">Yeni sekmede aç</button>
+        <button class="xbtn" data-close>✕ Kapat</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe id="frameSuggest" class="frame" referrerpolicy="no-referrer"></iframe>
+      <div class="modal-foot">
+        <div class="foot-text">Önerinizi gönderdikten sonra fotoğraf eklemek isterseniz aşağıdaki butona tıklayabilirsiniz.</div>
+        <button class="xbtn primary" id="goUploadFromModal">📷 Önerine yönelik fotoğraf ekle</button>
+      </div>
+    </div>
+  </dialog>
+
+<script>
+  // ==== 🔧 LİNKLERİNİ BURAYA KOY ====
+  const LINK_SUGGEST = "https://forms.office.com/Pages/ResponsePage.aspx?id=vP9DjXqlnk2FBdXxjX6sm29P8ZqIMq5Hh-oV8Qg4EGBUMUFFNTdDSE5GR1VNRFI0WlNOT0JaTk45NC4u"; // Öneri formu
+  const LINK_UPLOAD  = "https://eczacibasi-my.sharepoint.com/:f:/g/personal/emirhan_cakir_vitra_com_tr/ElR-CIOuCK1KuvMb4sjEL1IBaJ5WQElt1kn8xARkmcVAPg"; // Fotoğraf yükleme linki (Embed engellenirse yeni sekmeye düşer)
+
+
+  const $ = (s)=>document.querySelector(s);
+
+  // Öneri formu modalı aç
+  $('#openSuggest').addEventListener('click', ()=>{
+    const dlg   = $('#dlgSuggest');
+    const frame = $('#frameSuggest');
+
+    frame.src = LINK_SUGGEST + (LINK_SUGGEST.includes('?') ? '&' : '?') + 'embed=true';
+    dlg.showModal();
+  });
+
+  // Fotoğraf yükleme (yeni sekme)
+  $('#openUpload').addEventListener('click', ()=> window.open(LINK_UPLOAD,'_blank','noopener'));
+  $('#goUploadFromModal').addEventListener('click', ()=> window.open(LINK_UPLOAD,'_blank','noopener'));
+
+  // Modal kontrol butonları
+  document.querySelectorAll('[data-close]').forEach(btn=>btn.addEventListener('click', e=> e.target.closest('dialog').close()));
+  document.querySelectorAll('[data-open-new]').forEach(btn=>btn.addEventListener('click', ()=> window.open(LINK_SUGGEST,'_blank','noopener')));
 </script>
 </body>
 </html>
